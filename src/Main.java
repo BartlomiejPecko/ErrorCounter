@@ -8,6 +8,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 
@@ -15,12 +16,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        long startTime = System.currentTimeMillis(); // timer
 
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter the path to log file");
-        String logFilePath = sc.nextLine();
+        String logFilePath = "GcmWebServices_Trace.txt";//sc.nextLine();
+
+
+        long startTime = System.currentTimeMillis(); // timer
 
 
         try {
@@ -28,7 +31,7 @@ public class Main {
             for (Map.Entry<String, Integer> entry : errorCounts.entrySet()) {
                 System.out.println(entry.getKey() + ": " + entry.getValue()); //print errorów
             }
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             System.out.println("File not found");
         }
         long endTime = System.currentTimeMillis(); // Stop the timer
@@ -38,34 +41,43 @@ public class Main {
 
         }
 
-    public static Map<String, Integer> countErrors(String logFilePath) throws IOException {
+    public static Map<String, Integer> countErrors(String logFilePath) throws IOException, ParseException {
         Map<String, Integer> errorCounts = new HashMap<>();
+
+        List<String> XXX = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(logFilePath))) {
             String line;
+            StringBuffer sb = new StringBuffer();
             while ((line = reader.readLine()) != null) {
-                String error = extractError(line);
-                if (error != null) {
-                    errorCounts.put(error, errorCounts.getOrDefault(error, 0) + 1);
+                if(line.length() > 0) {
+                    char firstChar = line.charAt(0);
+                    if (firstChar >= '0' && firstChar <= '9') {
+                        if (!sb.isEmpty()) {
+                            XXX.add(sb.toString());
+                            sb.setLength(0);
+                        }
+
+                    }
+                    sb.append(line);
                 }
+//                String error = extractError(line);
+//                if (error != null) {
+//                    errorCounts.put(error, errorCounts.getOrDefault(error, 0) + 1);
+//                    XXX.add(line);
+//
+//
+//                }
             }
+
+        }
+
+        List<LogItem> logItemList = new ArrayList<>();
+        for(String singleLog : XXX){
+            logItemList.add(new LogItem(singleLog));
         }
 
         return errorCounts;
-    }
 
-    private static String extractError(String logLine) {
-
-
-        if (logLine.contains("ERROR")) {
-            int startIndex = logLine.indexOf("ERrgrdgR") + 6; // moment w ktorym sie zaczyna error msg
-            int endIndex = logLine.indexOf(" ", startIndex);
-            if (endIndex == -1) {
-                endIndex = logLine.length();
-            }
-            return logLine.substring(startIndex, endIndex);
-        }
-
-        return null; // jak nie ma
     }
 }
