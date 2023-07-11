@@ -17,7 +17,9 @@ public class Main {
     public static void main(String[] args) {
 
 
-        Scanner sc = new Scanner(System.in);
+
+
+        //Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter the path to log file");
         String logFilePath = "GcmWebServices_Trace.txt";//sc.nextLine();
@@ -38,6 +40,8 @@ public class Main {
         long executionTime = endTime - startTime;
 
         System.out.println("Execution time: " + executionTime + " milliseconds");
+
+
 
         }
 
@@ -73,9 +77,14 @@ public class Main {
         }
 
         List<LogItem> logItemList = new ArrayList<>();
+        int x = 0;
         for(String singleLog : XXX){
             logItemList.add(new LogItem(singleLog));
+            x +=1;
+
+
         }
+        //System.out.println(x);
 
         return errorCounts;
 
