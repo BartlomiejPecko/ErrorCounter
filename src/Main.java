@@ -1,17 +1,11 @@
-// dodac timery
-// id inne = ten sam log
-// klasa postać z "XXXX" zawierajaca poszczegolne wystapienia
-// dane do pliku
-// historia wystepowania błędów, rozne dni
-//jakie problemy z danej klasy
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.*;
-
-import static com.sun.tools.javac.util.Log.logKey;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class Main {
@@ -33,7 +27,7 @@ public class Main {
         try {
             Map<String, Integer> errorCounts = countErrors(logFilePath);
             for (Map.Entry<String, Integer> entry : errorCounts.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue()); //print errorów
+                System.out.println(entry.getKey() + ": " + entry.getValue());
             }
         } catch (IOException | ParseException e) {
             System.out.println("File not found");
@@ -42,9 +36,6 @@ public class Main {
         long executionTime = endTime - startTime;
 
         System.out.println("Execution time: " + executionTime + " milliseconds");
-
-
-
         }
 
     public static Map<String, Integer> countErrors(String logFilePath) throws IOException, ParseException {
@@ -67,13 +58,7 @@ public class Main {
                     }
                     sb.append(line);
                 }
-//                String error = extractError(line);
-//                if (error != null) {
-//                    errorCounts.put(error, errorCounts.getOrDefault(error, 0) + 1);
-//                    XXX.add(line);
-//
-//
-//                }
+
             }
 
         }
@@ -85,11 +70,6 @@ public class Main {
             logItemList.add(new LogItem(singleLog, LogItem.logKeys));
 
         }
-
-
-
-        //System.out.println(x);
-
         return errorCounts;
 
     }

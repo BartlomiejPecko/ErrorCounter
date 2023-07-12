@@ -1,11 +1,6 @@
-import org.w3c.dom.ls.LSOutput;
-
-import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.sun.tools.javac.util.Log.logKey;
 
 public class LogItem {
     Date logData; //
@@ -16,7 +11,6 @@ public class LogItem {
     String logPackage;
 
     String logSubject;  /*EXCEPTION CAUGHT IN [com.scc.gcmreport.gcmfunction.UserDefinedField]*/
-
 
 
     String logContent;
@@ -37,7 +31,7 @@ public class LogItem {
         logPackage = parts[4];
 
         //logSubject = parts[6];
-        //String temp = singleLog.replace(dateTimeString, "").replace(logTime, "").replace(type, "").replace(logPackage, "");
+
 
         StringBuilder subjectBuilder = new StringBuilder();
         int subjectStartIndex = 6; // Start index of the log subject
@@ -51,7 +45,7 @@ public class LogItem {
                         break; // Stop appending if new line character is encountered
                     //}
                   //  subjectBuilder.append(" ");
-                }subjectBuilder.append(" ");
+                }subjectBuilder.append(" ");  //TODO  //Cuts keys too early
             }
 
         }
@@ -73,24 +67,14 @@ public class LogItem {
         logContent = contentBuilder.toString();
         logKey = logPackage + " - " + logSubject;
         logKeys.add(logKey);
-       // System.out.println("Date: " + logData);
-      //  System.out.println("Time: " + logTime);
-      //  System.out.println("Type: " + type);
-      //  System.out.println("Package: " + logPackage);
+        //System.out.println("Date: " + logData);
+        //System.out.println("Time: " + logTime);
+        //System.out.println("Type: " + type);
+        //System.out.println("Package: " + logPackage);
         //System.out.println("Subject: " + logSubject);
         //System.out.println("\n");
         //System.out.println("Content: " + logContent);
 
-
-       // List<String> logKeys = new ArrayList<>();
-       //logKeys.add(logKey);
-
-       //int count = logKeys.size();
-     //   System.out.println(count);
-
-
-       // int count = logKeys.size();
-     //   System.out.println(count);
 
         Map<String, Integer> logKeyCountMap = new HashMap<>();
         for (String logKey : logKeys) {
@@ -115,14 +99,6 @@ public class LogItem {
 
 
 
-
-
-
-
-
-
-
-
     @Override
     public String toString() {
         return "Date: " + logData +
@@ -139,6 +115,5 @@ public class LogItem {
 
 
 
-// 12-06-2023 07:24:55,669 ERROR []:151 com.scc.genetools.extensions.CoreClassProvider - Registering externsion classes from :com.scc.ext.registrations.ExtClassManager
-// 14-06-2023 10:43:36,659 ERROR []:169 com.scc.gcmreport.remoteprinting.RemotePrintingTokenMaintenance - null
+
 
