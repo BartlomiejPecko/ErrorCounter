@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
+import static com.sun.tools.javac.util.Log.logKey;
+
 
 public class Main {
 
@@ -77,13 +79,15 @@ public class Main {
         }
 
         List<LogItem> logItemList = new ArrayList<>();
-        int x = 0;
-        for(String singleLog : XXX){
-            logItemList.add(new LogItem(singleLog));
-            x +=1;
+       // List<String> logKeys = new ArrayList<>();
 
+        for(String singleLog : XXX){
+            logItemList.add(new LogItem(singleLog, LogItem.logKeys));
 
         }
+
+
+
         //System.out.println(x);
 
         return errorCounts;

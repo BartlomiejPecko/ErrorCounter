@@ -3,10 +3,9 @@ import org.w3c.dom.ls.LSOutput;
 import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
+import static com.sun.tools.javac.util.Log.logKey;
 
 public class LogItem {
     Date logData; //
@@ -22,11 +21,11 @@ public class LogItem {
 
     String logContent;
 
-    String logKey;
+    static String logKey;
 
+    static List<String> logKeys = new ArrayList<>();
 
-
-    public LogItem(String singleLog) throws ParseException {
+    public LogItem(String singleLog, List<String> logKeys) throws ParseException {
         String[] parts = singleLog.split(" ");
 
 
@@ -48,11 +47,11 @@ public class LogItem {
                 subjectBuilder.append(parts[i]);
                 if (i < parts.length - 1) {
                     // Check if the next part starts with a new line character
-                    if (parts[i + 1].startsWith("\n")) {
+                   // if (parts[i + 1].startsWith("\n")) {
                         break; // Stop appending if new line character is encountered
-                    }
-                    subjectBuilder.append(" ");
-                }
+                    //}
+                  //  subjectBuilder.append(" ");
+                }subjectBuilder.append(" ");
             }
 
         }
@@ -73,6 +72,7 @@ public class LogItem {
 
         logContent = contentBuilder.toString();
         logKey = logPackage + " - " + logSubject;
+        logKeys.add(logKey);
        // System.out.println("Date: " + logData);
       //  System.out.println("Time: " + logTime);
       //  System.out.println("Type: " + type);
@@ -82,9 +82,45 @@ public class LogItem {
         //System.out.println("Content: " + logContent);
 
 
+       // List<String> logKeys = new ArrayList<>();
+       //logKeys.add(logKey);
+
+       //int count = logKeys.size();
+     //   System.out.println(count);
 
 
+       // int count = logKeys.size();
+     //   System.out.println(count);
+
+        Map<String, Integer> logKeyCountMap = new HashMap<>();
+        for (String logKey : logKeys) {
+            if (logKeyCountMap.containsKey(logKey)) {
+                logKeyCountMap.put(logKey, logKeyCountMap.get(logKey) + 1);
+            } else {
+                logKeyCountMap.put(logKey, 1);
+            }
+        }
+
+
+        for (Map.Entry<String, Integer> entry : logKeyCountMap.entrySet()) {
+            String logKey = entry.getKey();
+            int count = entry.getValue();
+
+            System.out.println(logKey + " ---> " + count + " (number of repetitions)");
+        }
+
+        int totalErrors = logKeyCountMap.size();
+        System.out.println("Total count of separate errors: " + totalErrors);
     }
+
+
+
+
+
+
+
+
+
 
 
     @Override
