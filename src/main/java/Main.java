@@ -1,10 +1,14 @@
+
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Main {
+
 
     public static void main(String[] args) {
 
@@ -15,10 +19,10 @@ public class Main {
         long startTime = System.currentTimeMillis(); // Timer
 
         try {
-            Set<String> uniqueErrors = Counter.countErrors(logFilePath);
-            int totalErrors = uniqueErrors.size();
+            List<String> uniqueErrors = Counter.countErrors(logFilePath);
+            int totalUniqueErrors = uniqueErrors.size();
 
-            System.out.println("Total count of unique errors: " + totalErrors);
+            System.out.println("Total count of unique errors: " + totalUniqueErrors);
             System.out.println("Unique errors:");
 
 
@@ -36,9 +40,11 @@ public class Main {
             System.out.println("File not found");
         }
 
+
         long endTime = System.currentTimeMillis(); // Stop the timer
         long executionTime = endTime - startTime;
 
         System.out.println("Execution time: " + executionTime + " milliseconds");
+
     }
 }

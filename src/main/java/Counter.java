@@ -1,16 +1,15 @@
+
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Counter {
 
-    public static Set<String> countErrors(String logFilePath) throws IOException, ParseException {
-        Set<String> uniqueErrors = new HashSet<>();
+    public static List<String> countErrors(String logFilePath) throws IOException, ParseException {
+        List<String> uniqueErrorList = new ArrayList<>();
 
         List<String> XXX = new ArrayList<>();
 
@@ -28,6 +27,7 @@ public class Counter {
                     }
                     sb.append(line);
                 }
+
             }
         }
 
@@ -36,12 +36,14 @@ public class Counter {
         for (String singleLog : XXX) {
             LogItem logItem = new LogItem(singleLog);
             logItemList.add(logItem);
-            uniqueErrors.addAll(logItem.getErrors());
-
-
+            for (String error : logItem.getErrors()) {
+                if (!uniqueErrorList.contains(error)) {
+                    uniqueErrorList.add(error);
+                }
+            }
         }
 
-        return uniqueErrors;
+        return uniqueErrorList;
     }
 }
 

@@ -1,3 +1,5 @@
+
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,11 +31,7 @@ public class LogItem {
             for (int i = subjectStartIndex; i < parts.length; i++) {
                 subjectBuilder.append(parts[i]);
                 if (i < parts.length - 1) {
-                    // Check if the next part starts with a new line character
-                   // if (parts[i + 1].startsWith("\n")) {
-                        break; // Stop appending if new line character is encountered
-                    //}
-                  //  subjectBuilder.append(" ");
+                        break;
                 }subjectBuilder.append(" ");  //TODO  //Cuts keys too early
             }
         }
@@ -55,12 +53,12 @@ public class LogItem {
         logKey = logPackage + " - " + logSubject;
         logKeys.add(logKey);
 
-        Map<String, Integer> logKeyCountMap = new HashMap<>();
-
-        for (String logKey : logKeys) {
-            logKeyCountMap.put(logKey, logKeyCountMap.getOrDefault(logKey, 0) + 1);
-
-        }
+//        Map<String, Integer> logKeyCountMap = new HashMap<>();
+//
+//        for (String logKey : logKeys) {
+//            logKeyCountMap.put(logKey, logKeyCountMap.getOrDefault(logKey, 0) + 1);
+//
+//        }
     }
     @Override
     public String toString() {
@@ -71,9 +69,6 @@ public class LogItem {
                 "\nSubject: " + logSubject +
                 "\n";
 
-    }
-    public String getLogKey() {
-        return logKey;
     }
 
     public List<String> getErrors() {
