@@ -1,22 +1,19 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Main {
-
-
     public static void main(String[] args) {
-
-        // Scanner sc = new Scanner(System.in);
         System.out.println("Enter the path to log file");
-        String logFilePath = "GcmWebServices_Trace.txt";// sc.nextLine();
+        String logFilePath = "GcmWebServices_Trace.txt";
 
-        long startTime = System.currentTimeMillis(); // Timer
+        long startTime = System.currentTimeMillis();
 
         try {
             List<String> uniqueErrors = Counter.countErrors(logFilePath);
@@ -24,7 +21,6 @@ public class Main {
 
             System.out.println("Total count of unique errors: " + totalUniqueErrors);
             System.out.println("Unique errors:");
-
 
             Map<String, Integer> errorCounts = new HashMap<>();
             for (String error : uniqueErrors) {
@@ -36,15 +32,24 @@ public class Main {
                 int count = entry.getValue();
                 System.out.println(error + ": " + count + " times");
             }
+
+            // Convert errorCounts map to JSON
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(errorCounts);
+
+            // Save JSON to a file
+            try (FileWriter writer = new FileWriter("error_counts.json")) {
+                writer.write(json);
+            }
+
+            System.out.println("Error counts saved to error_counts.json");
         } catch (IOException | ParseException e) {
             System.out.println("File not found");
         }
 
-
-        long endTime = System.currentTimeMillis(); // Stop the timer
+        long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
 
         System.out.println("Execution time: " + executionTime + " milliseconds");
-
     }
 }
