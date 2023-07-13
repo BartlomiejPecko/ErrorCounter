@@ -1,76 +1,44 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
 
-
-
-
-        //Scanner sc = new Scanner(System.in);
-
+        // Scanner sc = new Scanner(System.in);
         System.out.println("Enter the path to log file");
-        String logFilePath = "GcmWebServices_Trace.txt";//sc.nextLine();
+        String logFilePath = "GcmWebServices_Trace.txt";// sc.nextLine();
 
-
-        long startTime = System.currentTimeMillis(); // timer
-
+        long startTime = System.currentTimeMillis(); // Timer
 
         try {
-            Map<String, Integer> errorCounts = countErrors(logFilePath);
+            Set<String> uniqueErrors = Counter.countErrors(logFilePath);
+            int totalErrors = uniqueErrors.size();
+
+            System.out.println("Total count of unique errors: " + totalErrors);
+            System.out.println("Unique errors:");
+
+
+            Map<String, Integer> errorCounts = new HashMap<>();
+            for (String error : uniqueErrors) {
+                errorCounts.put(error, errorCounts.getOrDefault(error, 0) + 1);
+            }
+
             for (Map.Entry<String, Integer> entry : errorCounts.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
+                String error = entry.getKey();
+                int count = entry.getValue();
+                System.out.println(error + ": " + count + " times");
             }
         } catch (IOException | ParseException e) {
             System.out.println("File not found");
         }
+
         long endTime = System.currentTimeMillis(); // Stop the timer
         long executionTime = endTime - startTime;
 
         System.out.println("Execution time: " + executionTime + " milliseconds");
-        }
-
-    public static Map<String, Integer> countErrors(String logFilePath) throws IOException, ParseException {
-        Map<String, Integer> errorCounts = new HashMap<>();
-
-        List<String> XXX = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(logFilePath))) {
-            String line;
-            StringBuffer sb = new StringBuffer();
-            while ((line = reader.readLine()) != null) {
-                if(line.length() > 0) {
-                    char firstChar = line.charAt(0);
-                    if (firstChar >= '0' && firstChar <= '9') {
-                        if (!sb.isEmpty()) {
-                            XXX.add(sb.toString());
-                            sb.setLength(0);
-                        }
-
-                    }
-                    sb.append(line);
-                }
-
-            }
-
-        }
-
-        List<LogItem> logItemList = new ArrayList<>();
-       // List<String> logKeys = new ArrayList<>();
-
-        for(String singleLog : XXX){
-            logItemList.add(new LogItem(singleLog, LogItem.logKeys));
-
-        }
-        return errorCounts;
-
     }
 }
