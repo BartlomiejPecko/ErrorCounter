@@ -25,10 +25,12 @@ public class Counter {
     }
 
     private static String getKeyFromLine(String line) {
-        String[] parts = line.split(" ");
-        for (String part : parts) {
-            if (part.startsWith("com.scc")) {
-                return part.replaceAll("[0-9]", "x");
+        if (!line.isEmpty() && Character.isDigit(line.charAt(0))) {
+            String[] parts = line.split(" ");
+            for (String part : parts) {
+                if (part.startsWith("com.scc")) {
+                    return part.replaceAll("[0-9]", "x");
+                }
             }
         }
         return null;

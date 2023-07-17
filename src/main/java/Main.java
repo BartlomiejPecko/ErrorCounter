@@ -7,6 +7,7 @@ public class Main {
         String outputFilePath = "keyCounts.txt";
         Counter.countKeyOccurrences(inputFilePath, outputFilePath);
 
+
         long endTime = System.currentTimeMillis(); //ends timer
         long executionTime = endTime - startTime;
 
