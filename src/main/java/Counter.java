@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 import java.io.*;
 import java.util.*;
 
@@ -8,12 +9,14 @@ public class Counter {
     public static void countKeyOccurrences(String inputFilePath, String outputFilePath) {
         Map<String, Integer> keyCounts = new HashMap<>(); //map storing count of keys
 
+
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String key = getKeyFromLine(line);
                 if (key != null) {
                     keyCounts.put(key, keyCounts.getOrDefault(key, 0) + 1);
+
                 }
             }
         } catch (IOException e) {
@@ -22,19 +25,40 @@ public class Counter {
 
         saveToTextFile(keyCounts, outputFilePath);
         saveToJson(keyCounts, outputFilePath);
+
+        ChartGenerator.generateChart(keyCounts, outputFilePath);
     }
+
+//    private static String getKeyFromLine(String line) {
+//        if (!line.isEmpty() && Character.isDigit(line.charAt(0))) {
+//            String[] parts = line.split(" ");
+//            for (String part : parts) {
+//                if (part.startsWith("com.scc")) {
+//                    return part.replaceAll("[0-9]", "x");
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     private static String getKeyFromLine(String line) {
         if (!line.isEmpty() && Character.isDigit(line.charAt(0))) {
             String[] parts = line.split(" ");
-            for (String part : parts) {
-                if (part.startsWith("com.scc")) {
-                    return part.replaceAll("[0-9]", "x");
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].startsWith("com.scc")) {
+                    StringBuilder keyBuilder = new StringBuilder(parts[i]);
+                    for (int j = i + 1; j < parts.length; j++) {
+                        keyBuilder.append(" ").append(parts[j]);
+                    }
+                    String key = keyBuilder.toString();
+                    return key.replaceAll("[0-9]", "x");
                 }
             }
         }
         return null;
     }
+
+
     private static void saveToTextFile(Map<String, Integer> keyCounts, String outputFilePath) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(outputFilePath))) {
             for (Map.Entry<String, Integer> entry : keyCounts.entrySet()) {
