@@ -3,61 +3,56 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Counter {
+
     public static void countKeyOccurrences(String inputFilePath, String outputFilePath) {
-        Map<String, Integer> keyCounts = new HashMap<>(); //map storing count of keys
+        Map<String, Integer> keyCounts;
+
+        Map<String, Integer> sortedKeyCounts;
+        try (Stream<String> lines = Files.lines(Paths.get(inputFilePath))) {
+            keyCounts = lines
+                    .filter(line -> !line.isEmpty() && Character.isDigit(line.charAt(0)))
+                    .map(Counter::getKeyFromLine)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toMap(
+                            key -> key.replaceAll("[0-9]", "x"),
+                            e -> 1,
+                            Integer::sum,
+                            HashMap::new
+                    ));
+
+            sortedKeyCounts = keyCounts.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String key = getKeyFromLine(line);
-                if (key != null) {
-                    keyCounts.put(key, keyCounts.getOrDefault(key, 0) + 1);
-
-                }
-            }
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
         saveToTextFile(keyCounts, outputFilePath);
         saveToJson(keyCounts, outputFilePath);
-
-        ChartGenerator.generateChart(keyCounts, outputFilePath);
+        ChartGenerator.generateChart(sortedKeyCounts, outputFilePath);
     }
 
     private static String getKeyFromLine(String line) {
-        if (!line.isEmpty() && Character.isDigit(line.charAt(0))) {
-            String[] parts = line.split(" ");
-            for (String part : parts) {
-                if (part.startsWith("com.scc")) {
-                    return part.replaceAll("[0-9]", "x");
-                }
+        String[] parts = line.split(" ");
+        for (String part : parts) {
+            if (part.startsWith("com.scc")) {
+                return part.replaceAll("[0-9]", "x");
             }
         }
         return null;
     }
-
-//    private static String getKeyFromLine(String line) {
-//        if (!line.isEmpty() && Character.isDigit(line.charAt(0))) {
-//            String[] parts = line.split(" ");
-//            for (int i = 0; i < parts.length; i++) {
-//                if (parts[i].startsWith("com.scc")) {
-//                    StringBuilder keyBuilder = new StringBuilder(parts[i]);
-//                    for (int j = i + 1; j < parts.length; j++) {
-//                        keyBuilder.append(" ").append(parts[j]);
-//                    }
-//                    String key = keyBuilder.toString();
-//                    return key.replaceAll("[0-9]", "x");
-//                }
-//            }
-//        }
-//        return null;
-//    }
-
 
     private static void saveToTextFile(Map<String, Integer> keyCounts, String outputFilePath) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(outputFilePath))) {
@@ -68,6 +63,7 @@ public class Counter {
             e.printStackTrace();
         }
     }
+
     private static void saveToJson(Map<String, Integer> keyCounts, String outputFilePath) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonObject jsonObject = new JsonObject();
@@ -82,4 +78,3 @@ public class Counter {
         }
     }
 }
-
