@@ -49,18 +49,22 @@ public class ChartGenerator {
         renderer.setSeriesPaint(0, Color.BLUE);
         renderer.setDrawBarOutline(false);
 
+        CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+        domainAxis.setLowerMargin(0.02);
+        domainAxis.setUpperMargin(0.02);
+
         for (int series = 0; series < plot.getDataset().getRowCount(); series++) {
             renderer.setSeriesItemLabelGenerator(series, new CustomLabelGenerator());
             renderer.setSeriesItemLabelsVisible(series, true);
             renderer.setSeriesItemLabelPaint(series, Color.BLACK);
         }
-        CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+
     }
 
     private static void saveChartAsPNG(JFreeChart chart, String outputFilePath) {
         try {
-            ChartUtils.saveChartAsPNG(new File(outputFilePath.replace(".txt", ".png")), chart, 800, 600);
+            ChartUtils.saveChartAsPNG(new File(outputFilePath.replace(".txt", ".png")), chart, 1200, 800);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -11,10 +11,12 @@ import java.util.stream.Stream;
 
 public class Counter {
 
-    public static void countKeyOccurrences(String inputFilePath, String outputFilePath) {
+    public static void countKeyOccurrences(String inputFilePath, String outputFilePath) throws IOException {
         Map<String, Integer> keyCounts;
 
         Map<String, Integer> sortedKeyCounts;
+        LinkedHashMap<String, Integer> top10KeyCounts;
+
         try (Stream<String> lines = Files.lines(Paths.get(inputFilePath))) {
             keyCounts = lines
                     .filter(line -> !line.isEmpty() && Character.isDigit(line.charAt(0)))
@@ -34,14 +36,21 @@ public class Counter {
                             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            top10KeyCounts = sortedKeyCounts.entrySet()
+                    .stream()
+                    .limit(12)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+
+        } catch (FileNotFoundException e) {
+            // Catch the FileNotFoundException and rethrow it as an IOException
+            throw new IOException("File not found: " + e.getMessage());
         }
 
         saveToTextFile(keyCounts, outputFilePath);
-        saveToJson(keyCounts, outputFilePath);
-        ChartGenerator.generateChart(sortedKeyCounts, outputFilePath);
+        saveToJson(sortedKeyCounts, outputFilePath);
+        ChartGenerator.generateChart(top10KeyCounts, outputFilePath);
     }
 
     private static String getKeyFromLine(String line) {
